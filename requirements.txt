@@ -1,0 +1,6 @@
+cma>=2
+matplotlib>=1.5
+numpy>=1.8
+scipy>=0.14
+pints>=0.0.1
+gpy>=1.0
