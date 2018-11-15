@@ -11,7 +11,7 @@ from __future__ import absolute_import, division
 from __future__ import print_function, unicode_literals
 
 
-import emupints.utils as emutils
+from . import utils as emutils
 
 
 def surface(

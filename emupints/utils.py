@@ -69,7 +69,7 @@ def predict_grid(model, grid, dims=None):
     return pred.reshape(rows, cols)
 
 
-#Functions to deal with composite kernels
+# Functions to deal with composite kernels
 def is_prod_kernel(kernel):
     """
     True when a given kernel is a GPy Prod kernel
@@ -141,3 +141,42 @@ def has_high_variance(kernel, threshold=10):
 
     return variance > threshold
 
+
+def simulate(
+    model,
+    parameters=None,
+    times=None,
+    noise_range_percent=0.05,
+    n_splits=50
+):
+    """
+    Simulates model for specified time interval with specified noise.
+    Noise is normal with standart deviation as: range * noise_range_percent.
+    Pass noise_range_percent=None if no noise wanted
+    Returns values, times, noise_stds
+    """
+
+    if parameters is None:
+        parameters = np.array(model.suggested_parameters())
+
+    if times is None:
+        times = model.suggested_times()
+
+    # take times and calculate values
+    min_time, max_time = min(times), max(times)
+    times = np.linspace(min_time, max_time, n_splits)
+
+    # simulate
+    values = model.simulate(parameters, times)
+
+    # noise
+    # by default set 5% of range as the standard deviation
+    if noise_range_percent is not None:
+        noise_stds = (values.max(axis=0) - values.min(axis=0)) * noise_range_percent
+
+        # final values
+        values = values + np.random.normal(0, noise_stds, values.shape)
+
+        return values, times, noise_stds
+
+    return values, times
