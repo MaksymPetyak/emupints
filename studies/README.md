@@ -1,0 +1,1 @@
+This folder contains notebooks that perform experiments for papers and test new features. For detailed examples on how `emupints` works see [examples](../examples).

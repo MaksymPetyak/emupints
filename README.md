@@ -1,10 +1,10 @@
 # Emupints
-emupints (Emulators for PINTS) provides an interface to apply machine learning techniques such as Gaussian Processes (GPs) and Bayesian Neural Networks (BNNs) to [PINTS](https://github.com/pints-team/pints).
+emupints (Emulators for PINTS) provides an interface to apply machine learning techniques such as Gaussian Processes (GPs) and Bayesian Neural Networks (BNNs) to [PINTS](https://github.com/pints-team/pints). <br/>
 For a good first tutorial see this [example notebook](examples/emulator-logistic-model.ipynb)
 
 ## Installing emupints
 
- There are a number of libraries required to use emupints, including: `pints` `GPy` `edward`
+ There are a number of libraries required to use emupints, including: `pints` `GPy` `edward` <br/>
  See [requirements.txt](requirements.txt) for more info. 
 
 These can easily be installed using `pip`. To do this, first make sure you have the latest version of pip installed:
