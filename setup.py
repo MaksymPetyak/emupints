@@ -40,8 +40,7 @@ setup(
         'matplotlib>=1.5, <3',
         'pints>=0.0.1',
         'gpy>=1.0',
-        'torch>=0.4',
-        'pyro>=0.2'
+        'tensorflow>=1.1, <1.11'
     ],
     extras_require={
         'docs': [

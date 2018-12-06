@@ -18,3 +18,12 @@ __pycache__/
 
 # vscode
 .vscode
+
+# virtualenv
+env
+
+# log
+studies/log
+
+# pycache
+emupints/__pycache__
