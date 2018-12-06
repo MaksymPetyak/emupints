@@ -15,17 +15,17 @@ import pints
 import copy
 
 
-class Emulator(pints.LogLikelihood):
+class Emulator(pints.LogPDF):
     """
-    *Extends:* :class:`LogLikelihood`
+    *Extends:* :class:`LogPDF`
 
     Abstract class from which all emulators should inherit.
-    An instance of the Emulator models given LogLikelihoods
+    An instance of the Emulator models given log-likelihood
 
     Arguments:
 
     ``log_likelihood``
-        A :class:`LogLikelihood`, the likelihood distribution being emulated.
+        A :class:`LogPDF`, the likelihood distribution being emulated.
     ``X``
         N by n_paremeters matrix containing inputs for training data
     ``y``
@@ -36,8 +36,8 @@ class Emulator(pints.LogLikelihood):
 
     def __init__(self, log_likelihood, X, y, normalize_input=False):
         # Perform sanity checks for given data
-        if not isinstance(log_likelihood, pints.LogLikelihood):
-            raise ValueError("Given pdf must extand LogLikelihood")
+        if not isinstance(log_likelihood, pints.LogPDF):
+            raise ValueError("Given pdf must extand LogPDF")
 
         self._n_parameters = log_likelihood.n_parameters()
 

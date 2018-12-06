@@ -183,7 +183,7 @@ def plot_fixed_param_grid(log_likelihood,
     Arguments:
 
     ``log_likelihood``
-        A :class:`LogLikelihood`, the likelihood function to plot.
+        A :class:`LogPDF`, the likelihood function to plot.
     ``fixed_parameters``
         An array of lists, where each element in a list is a tuple (i, val)
         where i shall be fixed to value val.

@@ -26,7 +26,7 @@ class GPEmulator(Emulator):
     Arguments:
 
     ``log_likelihood``
-        A :class:`LogLikelihood`, the likelihood distribution being emulated.
+        A :class:`LogPDF`, the likelihood distribution being emulated.
     ``X``
         N by n_paremeters matrix containing inputs for training data
     ``y``
