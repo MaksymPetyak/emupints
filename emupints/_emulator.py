@@ -37,7 +37,7 @@ class Emulator(pints.LogPDF):
     def __init__(self, log_likelihood, X, y, normalize_input=False):
         # Perform sanity checks for given data
         if not isinstance(log_likelihood, pints.LogPDF):
-            raise ValueError("Given pdf must extand LogPDF")
+            raise ValueError("Given pdf must extend LogPDF")
 
         self._n_parameters = log_likelihood.n_parameters()
 

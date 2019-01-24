@@ -14,6 +14,28 @@ import numpy as np
 from GPy import kern
 
 
+def fix_parameters(bounds):
+    """
+    Returns lists consisting of (parameter index, value) tuples.
+    Use for visualisations in situations where there are more than 2
+    inputs to a model
+    """
+    n_parameters = bounds.n_parameters()
+    fixed_parameters = []
+    for i in range(n_parameters):
+        for j in range(n_parameters):
+            if i == j:
+                continue
+            mid_vals = enumerate((bounds.lower()+bounds.upper())/2)
+            mid_vals = list(mid_vals)
+            mid_vals = [(idx, val) for (idx, val) in mid_vals
+                        if idx not in [i, j]]
+
+            fixed_parameters.append(mid_vals)
+
+    return fixed_parameters
+
+
 def generate_grid(lower, upper, splits, fixed=[]):
     """
     Generates a grid of evenly spaced out points for testing
