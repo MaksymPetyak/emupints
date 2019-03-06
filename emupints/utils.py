@@ -106,13 +106,14 @@ def is_add_kernel(kernel):
     return type(kernel) == kern.src.add.Add
 
 
-def kernel_to_string(kernel, ident=0):
+def kernel_to_string(kernel, ident=0, decimal_places=4):
     """
     Converts complex GPy kernels to strings
     """
     if kernel is None:
         return ""
     s = ""
+    formatting = "{:." + str(decimal_places) + "f}"
     tab = ident * " "
     if is_prod_kernel(kernel) or is_add_kernel(kernel):
         op = "*" if is_prod_kernel(kernel) else "+"
@@ -125,7 +126,7 @@ def kernel_to_string(kernel, ident=0):
         name = str(type(kernel)).split(".")[-1]
         name = name[:-2]
 
-        values = ",".join(["{:5f}".format(x) for x in kernel])
+        values = ",".join([formatting.format(x) for x in kernel])
         s = name + "(" + values + ")"
     return " " * ident + s
 

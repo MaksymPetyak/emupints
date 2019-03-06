@@ -36,9 +36,10 @@ def version(formatted=False):
 #
 from ._emulator import Emulator
 from ._gp_emulator import GPEmulator
+from ._wrapper import EmulatorWrapper
 
 
-__all__ = ["Emulator", "GPEmulator"]
+__all__ = ["Emulator", "GPEmulator", 'EmulatorWrapper']
 
 
 #
