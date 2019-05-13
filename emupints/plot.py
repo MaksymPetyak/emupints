@@ -12,6 +12,7 @@ from __future__ import print_function, unicode_literals
 
 
 from . import utils as emutils
+import numpy as np
 
 
 def surface(
@@ -169,16 +170,108 @@ def confidence_interval(param_range, mean, conf, show_points=True):
     return fig, axes
 
 
+def plot_surface_fixed_param(log_likelihood,
+                     bounds,
+                     fixed=None,
+                     n_splits=50,
+                     index_to_param_name=None,
+                     contour=True,
+                     additional_log_likelihoods=None,
+                     precision=5,
+                     **kwargs
+                     ):
+    """
+    2d contour or a 3d plot for high-dimensional model.
+    Have to provide fixed values for some parameters.
+
+    """
+    import matplotlib.pyplot as plt
+
+    fig = plt.figure()
+    ax = plt.axes(projection = None if contour else '3d')
+    n_parameters = bounds.n_parameters()
+    
+    # if variables not named use lowercase alphabet
+    if index_to_param_name is None:
+        alphabet = "abcdefghijklmnopqrstuvwxyz"
+        var_names = alphabet[:log_likelihood.n_parameters()]
+        index_to_param_name = dict(enumerate(var_names))
+    
+    # fix some parameters at random if not given
+    if not fixed and n_parameters > 2:
+        fixed = list(enumerate(bounds.sample(1)[0]))
+        fixed.pop(np.random.randint(n_parameters))
+        fixed.pop(np.random.randint(n_parameters - 1))
+
+    # get indices of params that are not fixed
+    p1_idx, p2_idx = [i for i in range(bounds.n_parameters())
+                      if i not in [j for (j, _) in fixed]]
+
+    # generate surfaces
+    p1_grid, p2_grid, grid = emutils.generate_grid(
+        bounds.lower(),
+        bounds.upper(),
+        n_splits,
+        fixed=fixed
+    )
+
+    likelihood_prediction = emutils.predict_grid(log_likelihood, grid)
+
+    # plotting
+    if contour is True:
+        ax.contourf(p1_grid, p2_grid,
+                    likelihood_prediction,
+                    cmap="Reds")
+    else:
+        ax.plot_surface(p1_grid, p2_grid,
+                        likelihood_prediction,
+                        alpha=0.8,
+                        **kwargs
+                        )
+        # predict other provided surfaces
+        if additional_log_likelihoods:
+            for likelihood in additional_log_likelihoods:
+                likelihood_prediction = emutils.predict_grid(
+                    likelihood,
+                    grid
+                )
+                ax.plot_surface(
+                    p1_grid, p2_grid,
+                    likelihood_prediction,
+                    alpha=0.5,
+                    **kwargs
+                )
+
+    # titles and fixed values
+    fixed_parameters_string = ", ".join(
+        [("{}={:."+ str(precision) + "f}").format(
+            index_to_param_name[i], val) for (i, val) in fixed
+        ]
+    )
+    ax.set_title("Fixed:" + fixed_parameters_string)
+    ax.set_xlabel(index_to_param_name[p1_idx])
+    ax.set_ylabel(index_to_param_name[p2_idx])
+    if not contour:
+        ax.set_zlabel("Likelihood")
+
+    plt.tight_layout()
+
+    return fig, ax
+
+
 def plot_fixed_param_grid(log_likelihood,
                           fixed_parameters,
                           bounds,
                           n_splits=50,
                           shape=None,
                           index_to_param_name=None,
-                          countour=True,
-                          additional_log_likelihoods=None):
+                          contour=True,
+                          additional_log_likelihoods=None,
+                          **kwargs
+                          ):
     """
-    Creates a 2d countour or a 3d plot where some parameter is fixed.
+    Creates a 2d contour or a 3d plot grid.
+    For high dimensional model fix by taking the mid-point.
 
     Arguments:
 
@@ -197,8 +290,8 @@ def plot_fixed_param_grid(log_likelihood,
         Should have: rows * cols = len(fixed_parameters)
     ``index_to_param_name``
         (Optional) Dictoinary mapping the index of parameter to its name
-    ``countour``
-        (Optional) If True draw 2d countour plot, otherwise 3d plot
+    ``contour``
+        (Optional) If True draw 2d contour plot, otherwise 3d plot
     ``additional_log_likelihoods``
         (Optional) List of additional log_likelihoods to display.
 
@@ -223,7 +316,7 @@ def plot_fixed_param_grid(log_likelihood,
     for row in range(rows):
         for col in range(cols):
             # change of axes required for 3d plots
-            if countour is False:
+            if contour is False:
                 axes[row, col].remove()
                 axes[row, col] = fig.add_subplot(
                     rows,
@@ -249,17 +342,24 @@ def plot_fixed_param_grid(log_likelihood,
                 fixed=fixed
             )
 
+            # switch to get row i parameter first
+            if row > col:
+                p1_idx, p2_idx = p2_idx, p1_idx
+                p1_grid, p2_grid = p2_grid, p1_grid
+
             likelihood_prediction = emutils.predict_grid(log_likelihood, grid)
 
             # plotting
-            if countour is True:
+            if contour is True:
                 ax.contourf(p1_grid, p2_grid,
                             likelihood_prediction,
                             cmap="Reds")
             else:
                 ax.plot_surface(p1_grid, p2_grid,
                                 likelihood_prediction,
-                                alpha=0.8)
+                                alpha=0.8,
+                                **kwargs
+                                )
                 if additional_log_likelihoods:
                     for likelihood in additional_log_likelihoods:
                         likelihood_prediction = emutils.predict_grid(
@@ -269,18 +369,43 @@ def plot_fixed_param_grid(log_likelihood,
                         ax.plot_surface(
                             p1_grid, p2_grid,
                             likelihood_prediction,
-                            alpha=0.5
+                            alpha=0.5,
+                            **kwargs
                         )
 
             # set title of each subgraph as the values of fixed parameters
             fixed_parameters_string = ", ".join(
-                [index_to_param_name[i] + "=" + str(val) for (i, val) in fixed]
+                ["{}={:.5f}".format(index_to_param_name[i], val) for (i, val) in fixed]
             )
             ax.set_title("Fixed:" + fixed_parameters_string)
             ax.set_xlabel(index_to_param_name[p1_idx])
             ax.set_ylabel(index_to_param_name[p2_idx])
-            if not countour:
+            if not contour:
                 ax.set_zlabel("Likelihood")
 
     plt.tight_layout()
+    return fig, axes
+
+
+def plot_history(history):
+    import matplotlib.pyplot as plt
+
+    fig, axes = plt.subplots(1, 1, figsize=(6, 4))
+
+    plt.figure()
+    plt.xlabel('Epoch')
+    plt.ylabel('Mean Abs Error')
+    plt.plot(
+        history.epoch,
+        np.array(history.history['mean_absolute_error']),
+        label='Train Loss',
+    )
+    plt.plot(
+        history.epoch,
+        np.array(history.history['val_mean_absolute_error']),
+        label='Val loss',
+    )
+    plt.tight_layout()
+    plt.legend()
+
     return fig, axes
