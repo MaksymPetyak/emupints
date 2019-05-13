@@ -31,8 +31,6 @@ class GPEmulator(Emulator):
         N by n_paremeters matrix containing inputs for training data
     ``y``
         N by 1, target values for each input vector
-    ``normalize_input``
-        If true then inputs will be normalized
     """
 
     def __init__(self, log_likelihood, X, y, **kwargs):
@@ -44,19 +42,22 @@ class GPEmulator(Emulator):
     def __call__(self, x):
         assert hasattr(self, "_gp"), "Must first fit GP to data"
 
-        if self._normalize_input:
-            x = (x - self._means) / self._stds
+        x = x.reshape((1, self._n_parameters))
+        if self._input_scaler:
+            x = self._input_scaler.transform(x)
 
         # convert to np array
         if type(x) != np.ndarray:
             x = np.asarray(x)
 
-        x = x.reshape((1, self._n_parameters))
         y = self._gp.posterior_samples(x, size=1)
 
         if y >= 0:
             warnings.warn("Non-negative log_likelihood predicted." +
                           "Indicative of high uncertainty in predictions.")
+
+        if self._output_scaler:
+            y = self._output_scaler.inverse_transform(y)
 
         return y
 
@@ -66,9 +67,10 @@ class GPEmulator(Emulator):
         """
         assert hasattr(self, "_gp"), "Must first fit GP to data"
 
-        if self._normalize_input:
-            x = (x - self._means) / self._stds
+        if self._input_scaler:
+            x = self._input_scaler.transform(x)
 
+        # don't apply output scaler to preserve variance values properly
         return self._gp.predict_noiseless(x, **kwargs)
 
     def set_parameters(

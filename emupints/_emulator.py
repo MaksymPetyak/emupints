@@ -30,11 +30,15 @@ class Emulator(pints.LogPDF):
         N by n_paremeters matrix containing inputs for training data
     ``y``
         N by 1, target values for each input vector
-    ``normalize_input``
-        If true then inputs will be normalized to have mean 0
+    ``input_scaler``
+        sklearn scalar type, don't pass class just the type.
+        E.g. StandardScaler provides standardization.
+    ``output_scaler``
+        sklearn scaler class that will be applied to output
     """
 
-    def __init__(self, log_likelihood, X, y, normalize_input=False):
+    def __init__(self, log_likelihood, X, y,
+                 input_scaler=False, output_scaler=False):
         # Perform sanity checks for given data
         if not isinstance(log_likelihood, pints.LogPDF):
             raise ValueError("Given pdf must extend LogPDF")
@@ -65,15 +69,26 @@ class Emulator(pints.LogPDF):
         if (X_r != y_r):
             raise ValueError("Input and target dimensions don't match")
 
-        self._normalize_input = normalize_input
-        if normalize_input:
-            self._means = np.mean(X, axis=0)
-            self._stds = np.std(X, axis=0)
-            X = (X - self._means) / self._stds
+        # Normalize data for inputs and output
+        # need to fit to test data
+        self._input_scaler = input_scaler
+        if input_scaler:
+            self._input_scaler.fit(X)
 
-        # copy input data
-        self._X = copy.deepcopy(X)
-        self._y = copy.deepcopy(y)
+        self._output_scaler = output_scaler
+        if output_scaler:
+            self._output_scaler.fit(y)
+
+        # copy input data to avoid possible changes to it outside the class
+        if input_scaler:
+            self._X = self._input_scaler.transform(X)
+        else:
+            self._X = copy.deepcopy(X)
+
+        if output_scaler:
+            self._y = self._output_scaler.transform(y)
+        else:
+            self._y = copy.deepcopy(y)
 
     def n_parameters(self):
         return self._n_parameters
