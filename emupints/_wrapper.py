@@ -4,6 +4,11 @@ import pints
 
 
 class EmulatorWrapper(pints.LogPDF):
+    """
+    *Extends:* :class:`pints.LogPDF`
+
+    Wrapper class that allows to pints to treat a given function as a LogPDF
+    """
 
     def __init__(self, emu, n_parameters):
         self._emu = emu
