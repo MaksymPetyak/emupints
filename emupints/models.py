@@ -1,3 +1,5 @@
+# Predefined simple models for neural network emulators
+
 import tensorflow as tf
 from tensorflow import keras
 
@@ -19,7 +21,9 @@ def create_model(n_parameters, model_size):
 
 def create_small_model(n_parameters):
     model = keras.Sequential()
+
     model.add(keras.layers.Dense(64, activation=tf.nn.relu, input_shape=(n_parameters,)))
+    model.add(keras.layers.Dense(128, activation=tf.nn.relu))
     model.add(keras.layers.Dense(64, activation=tf.nn.relu))
     model.add(keras.layers.Dense(1, activation=tf.identity))
 
@@ -29,9 +33,9 @@ def create_small_model(n_parameters):
 def create_average_model(n_parameters):
     model = keras.Sequential()
 
-    model.add(keras.layers.Dense(32, activation=tf.nn.relu, input_shape=(n_parameters,)))
+    model.add(keras.layers.Dense(128, activation=tf.nn.relu, input_shape=(n_parameters,)))
+    model.add(keras.layers.Dense(256, activation=tf.nn.relu))
     model.add(keras.layers.Dense(128, activation=tf.nn.relu))
-    model.add(keras.layers.Dense(32, activation=tf.nn.relu))
     model.add(keras.layers.Dense(1, activation=tf.identity))
 
     return model
@@ -40,9 +44,11 @@ def create_average_model(n_parameters):
 def create_large_model(n_parameters):
     model = keras.Sequential()
 
-    model.add(keras.layers.Dense(128, activation=tf.nn.relu, input_shape=(n_parameters,)))
+    model.add(keras.layers.Dense(64, activation=tf.nn.relu, input_shape=(n_parameters,)))
+    model.add(keras.layers.Dense(128, activation=tf.nn.relu,))
     model.add(keras.layers.Dense(256, activation=tf.nn.relu))
     model.add(keras.layers.Dense(128, activation=tf.nn.relu))
+    model.add(keras.layers.Dense(64, activation=tf.nn.relu))
     model.add(keras.layers.Dense(1, activation=tf.identity))
 
     return model

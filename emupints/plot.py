@@ -1,15 +1,9 @@
 #
 # Plotting functions for emulator related problems
 #
-# This file is part of PINTS.
-#  Copyright (c) 2017-2018, University of Oxford.
-#  For licensing information, see the LICENSE file distributed with the PINTS
-#  software package.
-#
 
 from __future__ import absolute_import, division
 from __future__ import print_function, unicode_literals
-
 
 from . import utils as emutils
 import numpy as np
@@ -171,32 +165,31 @@ def confidence_interval(param_range, mean, conf, show_points=True):
 
 
 def plot_surface_fixed_param(log_likelihood,
-                     bounds,
-                     fixed=None,
-                     n_splits=50,
-                     index_to_param_name=None,
-                     contour=True,
-                     additional_log_likelihoods=None,
-                     precision=5,
-                     **kwargs
-                     ):
+                             bounds,
+                             fixed=None,
+                             n_splits=50,
+                             index_to_param_name=None,
+                             contour=True,
+                             additional_log_likelihoods=None,
+                             precision=5,
+                             **kwargs
+                             ):
     """
     2d contour or a 3d plot for high-dimensional model.
     Have to provide fixed values for some parameters.
-
     """
     import matplotlib.pyplot as plt
 
     fig = plt.figure()
     ax = plt.axes(projection = None if contour else '3d')
     n_parameters = bounds.n_parameters()
-    
+
     # if variables not named use lowercase alphabet
     if index_to_param_name is None:
         alphabet = "abcdefghijklmnopqrstuvwxyz"
         var_names = alphabet[:log_likelihood.n_parameters()]
         index_to_param_name = dict(enumerate(var_names))
-    
+
     # fix some parameters at random if not given
     if not fixed and n_parameters > 2:
         fixed = list(enumerate(bounds.sample(1)[0]))
@@ -204,8 +197,11 @@ def plot_surface_fixed_param(log_likelihood,
         fixed.pop(np.random.randint(n_parameters - 1))
 
     # get indices of params that are not fixed
-    p1_idx, p2_idx = [i for i in range(bounds.n_parameters())
-                      if i not in [j for (j, _) in fixed]]
+    if fixed:
+        p1_idx, p2_idx = [i for i in range(bounds.n_parameters())
+                          if i not in [j for (j, _) in fixed]]
+    else:
+        p1_idx, p2_idx = 0, 1
 
     # generate surfaces
     p1_grid, p2_grid, grid = emutils.generate_grid(
@@ -243,12 +239,13 @@ def plot_surface_fixed_param(log_likelihood,
                 )
 
     # titles and fixed values
-    fixed_parameters_string = ", ".join(
-        [("{}={:."+ str(precision) + "f}").format(
-            index_to_param_name[i], val) for (i, val) in fixed
-        ]
-    )
-    ax.set_title("Fixed:" + fixed_parameters_string)
+    if fixed:
+        fixed_parameters_string = ", ".join(
+            [("{}={:."+ str(precision) + "f}").format(
+                index_to_param_name[i], val) for (i, val) in fixed
+            ]
+        )
+        ax.set_title("Fixed:" + fixed_parameters_string)
     ax.set_xlabel(index_to_param_name[p1_idx])
     ax.set_ylabel(index_to_param_name[p2_idx])
     if not contour:

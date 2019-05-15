@@ -1,11 +1,6 @@
 #
 # A collection of useful functions when dealing with emulators
 #
-# This file is part of PINTS.
-#  Copyright (c) 2017-2018, University of Oxford.
-#  For licensing information, see the LICENSE file distributed with the PINTS
-#  software package.
-#
 
 from __future__ import absolute_import, division
 from __future__ import print_function, unicode_literals
@@ -170,13 +165,14 @@ def simulate(
     parameters=None,
     times=None,
     noise_range_percent=0.05,
-    n_splits=50
+    n_splits=None
 ):
     """
     Simulates model for specified time interval with specified noise.
     Noise is normal with standart deviation as: range * noise_range_percent.
     Pass noise_range_percent=None if no noise wanted
     Returns values, times, noise_stds
+    If n_splits is provided divide time interval into n_splits uniform parts.
     """
 
     if parameters is None:
@@ -186,8 +182,9 @@ def simulate(
         times = model.suggested_times()
 
     # take times and calculate values
-    min_time, max_time = min(times), max(times)
-    times = np.linspace(min_time, max_time, n_splits)
+    if n_splits:
+        min_time, max_time = min(times), max(times)
+        times = np.linspace(min_time, max_time, n_splits)
 
     # simulate
     values = model.simulate(parameters, times)

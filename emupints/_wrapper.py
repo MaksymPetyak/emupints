@@ -1,4 +1,6 @@
-# A simple wrapper you can use for a created callable model
+#
+# A simple wrapper to transform a function into a basic emulator
+#
 
 import pints
 
