@@ -1,11 +1,7 @@
 #
 # emupints setuptools script
 #
-# This file is part of emupints.
-# Copyright (c) 2017-2018, University of Oxford.
-# For licensing information, see the LICENSE file distributed with the emupint
-# software package.
-#
+
 from setuptools import setup, find_packages
 
 # Load text for description and license

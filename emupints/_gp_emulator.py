@@ -37,19 +37,22 @@ class GPEmulator(Emulator):
     def __call__(self, x):
         assert hasattr(self, "_gp"), "Must first fit GP to data"
 
-        x = x.reshape((1, self._n_parameters))
-        if self._input_scaler:
-            x = self._input_scaler.transform(x)
-
         # convert to np array
         if type(x) != np.ndarray:
             x = np.asarray(x)
 
-        y = self._gp.posterior_samples(x, size=1)
+        x = x.reshape((1, self._n_parameters))
+        if self._input_scaler:
+            x = self._input_scaler.transform(x)
 
+        y = self._gp.predict_noiseless(x)[0]
+
+        """
+        TODO: include warnings?
         if y >= 0:
             warnings.warn("Non-negative log_likelihood predicted." +
                           "Indicative of high uncertainty in predictions.")
+        """
 
         if self._output_scaler:
             y = self._output_scaler.inverse_transform(y)

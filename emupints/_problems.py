@@ -36,7 +36,7 @@ class Problems():
         'times': np.linspace(0, 3, 300),
         'param_names': ['a', 'b', 'c', 'd'],
         'simulation_noise_percent': 0.05,
-        'param_range_percent': 0.5,
+        'param_range_percent': 0.4,
         'prior': pints.UniformLogPrior,
     } # continious
 
@@ -50,7 +50,7 @@ class Problems():
         'simulation_noise_percent': 0.05,
         'param_range': [[0, 0, 0, 0], [5, 5, 5, 5]],
         'prior': pints.UniformLogPrior,
-    } # continious
+    } # discontinious
 
     FitzhughNagumoModel = {
         'model': toy.FitzhughNagumoModel,
@@ -74,7 +74,7 @@ class Problems():
         'simulation_noise_percent': 0.05,
         'param_range': [[0, 0, 2], [1, 1, 4]],
         'prior': pints.UniformLogPrior,
-    } #continious
+    } # discontinious
 
     SIRModel = {
         'model': toy.SIRModel,
@@ -84,7 +84,7 @@ class Problems():
         'param_names': ['S', 'I', 'R'],
         'times': np.arange(1, 22),
         'simulation_noise_percent': 0.05,
-        'param_range_percent': 0.4,
+        'param_range_percent': 0.5,
         'prior': pints.UniformLogPrior,
     }
 

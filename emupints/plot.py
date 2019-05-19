@@ -221,7 +221,7 @@ def plot_surface_fixed_param(log_likelihood,
     else:
         ax.plot_surface(p1_grid, p2_grid,
                         likelihood_prediction,
-                        alpha=0.8,
+                        alpha=0.9,
                         **kwargs
                         )
         # predict other provided surfaces
@@ -234,7 +234,7 @@ def plot_surface_fixed_param(log_likelihood,
                 ax.plot_surface(
                     p1_grid, p2_grid,
                     likelihood_prediction,
-                    alpha=0.5,
+                    alpha=0.3,
                     **kwargs
                 )
 
@@ -354,7 +354,7 @@ def plot_fixed_param_grid(log_likelihood,
             else:
                 ax.plot_surface(p1_grid, p2_grid,
                                 likelihood_prediction,
-                                alpha=0.8,
+                                alpha=0.6,
                                 **kwargs
                                 )
                 if additional_log_likelihoods:
@@ -366,7 +366,7 @@ def plot_fixed_param_grid(log_likelihood,
                         ax.plot_surface(
                             p1_grid, p2_grid,
                             likelihood_prediction,
-                            alpha=0.5,
+                            alpha=0.3,
                             **kwargs
                         )
 

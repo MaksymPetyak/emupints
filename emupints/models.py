@@ -1,4 +1,6 @@
+#
 # Predefined simple models for neural network emulators
+#
 
 import tensorflow as tf
 from tensorflow import keras
@@ -7,6 +9,7 @@ from tensorflow import keras
 # use identity for the last layer (regression tasks)
 # relu activation function
 # Minimise squared error
+
 
 def create_model(n_parameters, model_size):
     if model_size == 'small':
