@@ -24,57 +24,9 @@ class Problems():
         'times': np.linspace(0, 100, 100),
         'simulation_noise_percent': 0.05,   # std in normally distributed noise
         'param_names': ['r', 'K'],
-        'param_range': [[0.1, 400], [0.2, 600]],    # lower and upper bounds
+        'param_range': [[0.1, 400], [0.2, 600]],  # lower and upper bounds
         'prior': pints.UniformLogPrior,
     } # continious
-
-    LotkaVolterraModel = {
-        'model': toy.LotkaVolterraModel,
-        'n_parameters': 4,
-        'parameters': np.array([3, 2, 3, 2]),
-        'n_outputs': 2,
-        'times': np.linspace(0, 3, 300),
-        'param_names': ['a', 'b', 'c', 'd'],
-        'simulation_noise_percent': 0.05,
-        'param_range_percent': 0.4,
-        'prior': pints.UniformLogPrior,
-    } # continious
-
-    LotkaVolterraModelDiscontinious = {
-        'model': toy.LotkaVolterraModel,
-        'n_parameters': 4,
-        'parameters': np.array([3, 2, 3, 2]),
-        'n_outputs': 2,
-        'times': np.linspace(0, 3, 300),
-        'param_names': ['a', 'b', 'c', 'd'],
-        'simulation_noise_percent': 0.05,
-        'param_range': [[0, 0, 0, 0], [5, 5, 5, 5]],
-        'prior': pints.UniformLogPrior,
-    } # discontinious
-
-    FitzhughNagumoModel = {
-        'model': toy.FitzhughNagumoModel,
-        'n_parameters': 3,
-        'parameters': np.array([0.1, 0.5, 3]),
-        'n_outputs': 2,
-        'param_names': ['a', 'b', 'c', 'd'],
-        'times': np.linspace(0, 20, 200),
-        'simulation_noise_percent': 0.05,
-        'param_range_percent': 0.5,
-        'prior': pints.UniformLogPrior,
-    } #continious
-
-    FitzhughNagumoModelDiscontinious = {
-        'model': toy.FitzhughNagumoModel,
-        'n_parameters': 3,
-        'parameters': np.array([0.1, 0.5, 3]),
-        'n_outputs': 2,
-        'param_names': ['a', 'b', 'c', 'd'],
-        'times': np.linspace(0, 20, 200),
-        'simulation_noise_percent': 0.05,
-        'param_range': [[0, 0, 2], [1, 1, 4]],
-        'prior': pints.UniformLogPrior,
-    } # discontinious
 
     SIRModel = {
         'model': toy.SIRModel,
@@ -84,9 +36,33 @@ class Problems():
         'param_names': ['S', 'I', 'R'],
         'times': np.arange(1, 22),
         'simulation_noise_percent': 0.05,
-        'param_range_percent': 0.5,
+        'param_range': [[0, 0, 20], [1, 1, 60]],
         'prior': pints.UniformLogPrior,
     }
+
+    FitzhughNagumoModel = {
+        'model': toy.FitzhughNagumoModel,
+        'n_parameters': 3,
+        'parameters': np.array([0.1, 0.5, 3]),
+        'n_outputs': 2,
+        'param_names': ['a', 'b', 'c', 'd'],
+        'times': np.linspace(0, 20, 200),
+        'simulation_noise_percent': 0.05,
+        'param_range': [[0., 0., 0.], [10., 10., 10.]],
+        'prior': pints.UniformLogPrior,
+    } #continious
+
+    LotkaVolterraModel = {
+        'model': toy.LotkaVolterraModel,
+        'n_parameters': 4,
+        'parameters': np.array([3, 2, 3, 2]),
+        'n_outputs': 2,
+        'times': np.linspace(0, 3, 300),
+        'param_names': ['a', 'b', 'c', 'd'],
+        'simulation_noise_percent': 0.05,
+        'param_range': [[0, 0, 0, 0], [5, 5, 5, 5]],
+        'prior': pints.UniformLogPrior,
+    } # continious
 
     HodgkinHuxleyIKModel = {
         'model': toy.HodgkinHuxleyIKModel,
@@ -96,7 +72,8 @@ class Problems():
         'param_names': ['a', 'b', 'c', 'd', 'e'],
         'times': np.arange(0, 1200, 0.1),
         'simulation_noise_percent': 0.05,
-        'param_range_percent': 0.2,
+        'param_range': [[0.005, 5.0, 5.0, 0.06, 40.0],
+                        [0.02, 20.0, 20.0, 0.25, 160.0]],
         'prior': pints.UniformLogPrior,
     }
 
@@ -108,7 +85,8 @@ class Problems():
         'param_names': ['a', 'b', 'c', 'd', 'e'],
         'times': np.linspace(0, 100, 200),
         'simulation_noise_percent': 0.05,
-        'param_range_percent': 0.2,
+        'param_range': [[1, 1, 0.01, 0.01, 0.01],
+                        [10, 10, 1, 1, 1]],
         'prior': pints.UniformLogPrior,
     }
 
@@ -139,17 +117,15 @@ class Problems():
             )
             noise_stds = None
 
-        # create instance of a problem
+        # create instance of a problem and
         if problem_dict['n_outputs'] == 1:
             problem = pints.SingleOutputProblem(model, times, values)
         else:
             problem = pints.MultiOutputProblem(model, times, values)
 
         # create likelihood with or without known noise
-        if noise_stds is not None:
-            log_likelihood = pints.KnownNoiseLogLikelihood(problem, noise_stds)
-        else:
-            log_likelihood = pints.UnknownNoiseLogLikelihood(problem)
+        # log_likelihood = pints.UnknownNoiseLogLikelihood(problem)
+        log_likelihood = pints.KnownNoiseLogLikelihood(problem, noise_stds)
 
         # should either provide the percentage range for parameters
         # or the parameter range itself
@@ -160,9 +136,12 @@ class Problems():
         else:
             params_lower, params_upper = problem_dict['param_range']
 
+        # add noise
+        # noise_lower, noise_upper = problem_dict['noise_bounds']
+
         bounds = pints.RectangularBoundaries(
             lower=params_lower,
-            upper=params_upper
+            upper=params_upper,
         )
 
         log_prior = problem_dict['prior'](bounds)
