@@ -44,4 +44,3 @@ def estimate_parameters(chains):
     parameters = np.mean(np.mean(chains, axis=1), axis=0)
     std = np.std(np.std(chains, axis=1), axis=0)
     return parameters, std
-

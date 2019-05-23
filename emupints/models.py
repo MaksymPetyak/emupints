@@ -25,9 +25,23 @@ def create_model(n_parameters, model_size):
 def create_small_model(n_parameters):
     model = keras.Sequential()
 
-    model.add(keras.layers.Dense(64, activation=tf.nn.relu, input_shape=(n_parameters,)))
-    model.add(keras.layers.Dense(128, activation=tf.nn.relu))
-    model.add(keras.layers.Dense(64, activation=tf.nn.relu))
+    model.add(keras.layers.Dense(
+        64,
+        activation=tf.nn.leaky_relu,
+        input_shape=(n_parameters,),
+        kernel_regularizer=tf.keras.regularizers.l2(0.01),
+    ))
+    model.add(keras.layers.Dense(
+        128,
+        activation=tf.nn.leaky_relu,
+        kernel_regularizer=tf.keras.regularizers.l2(0.01),
+
+    ))
+    model.add(keras.layers.Dense(
+        64,
+        activation=tf.nn.leaky_relu,
+        kernel_regularizer=tf.keras.regularizers.l2(0.01)
+    ))
     model.add(keras.layers.Dense(1, activation=tf.identity))
 
     return model
@@ -36,9 +50,22 @@ def create_small_model(n_parameters):
 def create_average_model(n_parameters):
     model = keras.Sequential()
 
-    model.add(keras.layers.Dense(128, activation=tf.nn.relu, input_shape=(n_parameters,)))
-    model.add(keras.layers.Dense(256, activation=tf.nn.relu))
-    model.add(keras.layers.Dense(128, activation=tf.nn.relu))
+    model.add(keras.layers.Dense(
+        128,
+        activation=tf.nn.leaky_relu,
+        input_shape=(n_parameters,),
+        kernel_regularizer=tf.keras.regularizers.l2(0.01)
+    ))
+    model.add(keras.layers.Dense(
+        256,
+        activation=tf.nn.leaky_relu,
+        kernel_regularizer=tf.keras.regularizers.l2(0.01)
+    ))
+    model.add(keras.layers.Dense(
+        128,
+        activation=tf.nn.leaky_relu),
+        kernel_regularizer=tf.keras.regularizers.l2(0.01)
+    )
     model.add(keras.layers.Dense(1, activation=tf.identity))
 
     return model
@@ -47,11 +74,32 @@ def create_average_model(n_parameters):
 def create_large_model(n_parameters):
     model = keras.Sequential()
 
-    model.add(keras.layers.Dense(64, activation=tf.nn.relu, input_shape=(n_parameters,)))
-    model.add(keras.layers.Dense(128, activation=tf.nn.relu,))
-    model.add(keras.layers.Dense(256, activation=tf.nn.relu))
-    model.add(keras.layers.Dense(128, activation=tf.nn.relu))
-    model.add(keras.layers.Dense(64, activation=tf.nn.relu))
+    model.add(keras.layers.Dense(
+        64,
+        activation=tf.nn.leaky_relu,
+        input_shape=(n_parameters,),
+        kernel_regularizer=tf.keras.regularizers.l2(0.01)
+    ))
+    model.add(keras.layers.Dense(
+        128,
+        activation=tf.nn.leaky_relu,
+        kernel_regularizer=tf.keras.regularizers.l2(0.01)
+    ))
+    model.add(keras.layers.Dense(
+        256,
+        activation=tf.nn.leaky_relu,
+        kernel_regularizer=tf.keras.regularizers.l2(0.01)
+    ))
+    model.add(keras.layers.Dense(
+        128,
+        activation=tf.nn.leaky_relu,
+        kernel_regularizer=tf.keras.regularizers.l2(0.01)
+    ))
+    model.add(keras.layers.Dense(
+        64,
+        activation=tf.nn.leaky_relu,
+        kernel_regularizer=tf.keras.regularizers.l2(0.01)
+    ))
     model.add(keras.layers.Dense(1, activation=tf.identity))
 
     return model

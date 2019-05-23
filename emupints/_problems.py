@@ -21,7 +21,7 @@ class Problems():
         'n_parameters': 2,
         'parameters': np.array([0.15, 500]),
         'n_outputs': 1,
-        'times': np.linspace(0, 100, 100),
+        'times': np.linspace(0, 100, 200),
         'simulation_noise_percent': 0.05,   # std in normally distributed noise
         'param_names': ['r', 'K'],
         'param_range': [[0.1, 400], [0.2, 600]],  # lower and upper bounds
@@ -33,10 +33,11 @@ class Problems():
         'n_parameters': 3,
         'parameters': np.array([0.026, 0.285, 38]),
         'n_outputs': 2,
-        'param_names': ['S', 'I', 'R'],
-        'times': np.arange(1, 22),
+        'param_names': ['gamma', 'v', 'S0'],
+        'times': np.linspace(1, 22, 200),
         'simulation_noise_percent': 0.05,
-        'param_range': [[0, 0, 20], [1, 1, 60]],
+        #'param_range': [[0, 0, 20], [1, 1, 60]],
+        'param_range_percent': 0.2,
         'prior': pints.UniformLogPrior,
     }
 
@@ -48,7 +49,8 @@ class Problems():
         'param_names': ['a', 'b', 'c', 'd'],
         'times': np.linspace(0, 20, 200),
         'simulation_noise_percent': 0.05,
-        'param_range': [[0., 0., 0.], [10., 10., 10.]],
+        #'param_range': [[0., 0., 0.], [10., 10., 10.]],
+        'param_range_percent': 0.2,
         'prior': pints.UniformLogPrior,
     } #continious
 
@@ -57,10 +59,11 @@ class Problems():
         'n_parameters': 4,
         'parameters': np.array([3, 2, 3, 2]),
         'n_outputs': 2,
-        'times': np.linspace(0, 3, 300),
+        'times': np.linspace(0, 3, 200),
         'param_names': ['a', 'b', 'c', 'd'],
         'simulation_noise_percent': 0.05,
-        'param_range': [[0, 0, 0, 0], [5, 5, 5, 5]],
+        #'param_range': [[0, 0, 0, 0], [5, 5, 5, 5]],
+        'param_range_percent': 0.2,
         'prior': pints.UniformLogPrior,
     } # continious
 
@@ -70,10 +73,11 @@ class Problems():
         'parameters': np.array([0.01, 10, 10, 0.125, 80]),
         'n_outputs': 1,
         'param_names': ['a', 'b', 'c', 'd', 'e'],
-        'times': np.arange(0, 1200, 0.1),
+        'times': toy.HodgkinHuxleyIKModel().suggested_times(),
         'simulation_noise_percent': 0.05,
-        'param_range': [[0.005, 5.0, 5.0, 0.06, 40.0],
-                        [0.02, 20.0, 20.0, 0.25, 160.0]],
+        #'param_range': [[0.005, 5.0, 5.0, 0.06, 40.0],
+        #                [0.02, 20.0, 20.0, 0.25, 160.0]],
+        'param_range_percent': 0.2,
         'prior': pints.UniformLogPrior,
     }
 
@@ -85,8 +89,9 @@ class Problems():
         'param_names': ['a', 'b', 'c', 'd', 'e'],
         'times': np.linspace(0, 100, 200),
         'simulation_noise_percent': 0.05,
-        'param_range': [[1, 1, 0.01, 0.01, 0.01],
-                        [10, 10, 1, 1, 1]],
+        #'param_range': [[1, 1, 0.01, 0.01, 0.01],
+        #                [10, 10, 1, 1, 1]],
+        'param_range_percent': 0.2,
         'prior': pints.UniformLogPrior,
     }
 

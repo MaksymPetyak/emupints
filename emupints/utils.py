@@ -104,6 +104,7 @@ def is_add_kernel(kernel):
 def kernel_to_string(kernel, ident=0, decimal_places=4):
     """
     Converts complex GPy kernels to strings
+    TODO: rewrite with .format
     """
     if kernel is None:
         return ""
@@ -192,7 +193,7 @@ def simulate(
     # noise
     # by default set 5% of range as the standard deviation
     if noise_range_percent is not None:
-        noise_stds = (values.max(axis=0) - values.min(axis=0)) * noise_range_percent
+        noise_stds = np.abs(values.max(axis=0) - values.min(axis=0)) * noise_range_percent
 
         # final values
         values = values + np.random.normal(0, noise_stds, values.shape)
