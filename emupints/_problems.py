@@ -74,10 +74,11 @@ class Problems():
         'n_outputs': 1,
         'param_names': ['a', 'b', 'c', 'd', 'e'],
         'times': toy.HodgkinHuxleyIKModel().suggested_times(),
+        #'times': np.linspace(0, 1200, 200),
         'simulation_noise_percent': 0.05,
         #'param_range': [[0.005, 5.0, 5.0, 0.06, 40.0],
         #                [0.02, 20.0, 20.0, 0.25, 160.0]],
-        'param_range_percent': 0.2,
+        'param_range_percent': 0.1,
         'prior': pints.UniformLogPrior,
     }
 

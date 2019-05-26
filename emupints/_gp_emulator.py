@@ -38,8 +38,8 @@ class GPEmulator(Emulator):
         assert hasattr(self, "_gp"), "Must first fit GP to data"
 
         # convert to np array
-        if type(x) != np.ndarray:
-            x = np.asarray(x)
+        #if type(x) != np.ndarray:
+        #    x = np.asarray(x)
 
         x = x.reshape((1, self._n_parameters))
         if self._input_scaler:

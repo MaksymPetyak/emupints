@@ -53,8 +53,8 @@ class NNEmulator(Emulator):
             x = self._input_scaler.transform(x)
 
         # convert to np array
-        if type(x) != np.ndarray:
-            x = np.asarray(x)
+        #if type(x) != np.ndarray:
+        #   x = np.asarray(x)
 
         y = self._model.predict([x])
 
